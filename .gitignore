@@ -1,2 +1,8 @@
 01_TerminalProject/Show
+02_Multifile/prog
+02_Multifile/prog-a
+02_Multifile/prog-so
 .vscode
+**/*.o
+**/*.so
+**/*.a
