@@ -1,0 +1,14 @@
+set pagination off
+b range_get
+set $trigger_number = 0
+command 1
+    if $trigger_number >= 28 && $trigger_number <= 35
+        printf "@@@Range begin: %d\n", iter->begin
+        printf "@@@Range end: %d\n", iter->end
+        printf "@@@Range step: %d\n", iter->step
+        printf "@@@Range current: %d\n", iter->current
+    end
+    set $trigger_number += 1
+    c
+end
+run

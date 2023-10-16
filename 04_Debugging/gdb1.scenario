@@ -1,0 +1,12 @@
+set pagination off
+b range_next
+command 1
+    if iter->current % 5 == 0
+        printf "@@@Range begin: %d\n", iter->begin
+        printf "@@@Range end: %d\n", iter->end
+        printf "@@@Range step: %d\n", iter->step
+        printf "@@@Range current: %d\n", iter->current
+    end
+    c
+end
+run
