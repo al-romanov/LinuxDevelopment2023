@@ -1,0 +1,81 @@
+--- lab1.c	2023-11-18 23:34:01.335083000 +0300
++++ lab2.c	2023-11-18 23:44:47.130537380 +0300
+@@ -67,14 +67,23 @@
+       work_list[work_list_size++] = current_cell;
+       int lab_wall_idx_diff;
+       switch (neighbour_num) {
+-        case 0: lab_wall_idx_diff = -(2 * lab_size + 1); break;
+-        case 1: lab_wall_idx_diff = 1; break;
+-        case 2: lab_wall_idx_diff = 2 * lab_size + 1; break;
+-        case 3: lab_wall_idx_diff = -1; break;
++      case 0:
++        lab_wall_idx_diff = -(2 * lab_size + 1);
++        break;
++      case 1:
++        lab_wall_idx_diff = 1;
++        break;
++      case 2:
++        lab_wall_idx_diff = 2 * lab_size + 1;
++        break;
++      case 3:
++        lab_wall_idx_diff = -1;
++        break;
+       }
+       size_t lab_row = current_cell / lab_size * 2 + 1;
+       size_t lab_column = current_cell % lab_size * 2 + 1;
+-      lab_template[(2 * lab_size + 1) * lab_row + lab_column + lab_wall_idx_diff] = '.';
++      lab_template[(2 * lab_size + 1) * lab_row + lab_column +
++                   lab_wall_idx_diff] = '.';
+       current_cell = neighbour_cell;
+       visited[neighbour_cell] = 1;
+       ++visited_size;
+@@ -99,25 +108,42 @@
+   return lab_template;
+ }
+ 
++char *customize_lab(char *lab, size_t lab_size, char pass, char wall) {
++  size_t side_len = 2 * lab_size + 1;
++  for (size_t i = 0; i < side_len; ++i)
++    for (size_t j = 0; j < side_len; ++j)
++      if (lab[i * side_len + j] == '#')
++        lab[i * side_len + j] = wall;
++      else
++        lab[i * side_len + j] = pass;
++  return lab;
++}
++
+ void print_usage(const char *prog_name) {
+-    fputs("Usage: ", stderr);
+-    fprintf(stderr, "%s ", prog_name);
+-    fputs("size\n", stderr);
+-    fputs("\tsize has to be greater than 1 and less than UINT_MAX\n", stderr);
++  fputs("Usage: ", stderr);
++  fprintf(stderr, "%s ", prog_name);
++  fputs("symbols size\n", stderr);
++  fputs("\tsymbols is a string containing two chars: pass and wall\n", stderr);
++  fputs("\tsize has to be greater than 1 and less than UINT_MAX\n", stderr);
+ }
+ 
+ int main(int argc, char *argv[]) {
+-  if (argc != 2) {
++  if (argc != 3) {
+     print_usage(argv[0]);
+     return 1;
+   }
+-  size_t lab_size = atol(argv[1]);
+-  if (lab_size == 0 || lab_size >= UINT_MAX) {
++  if (strlen(argv[1]) != 2) {
+     print_usage(argv[0]);
+     return 2;
+   }
++  size_t lab_size = atol(argv[2]);
++  if (lab_size == 0 || lab_size >= UINT_MAX) {
++    print_usage(argv[0]);
++    return 3;
++  }
+   char *lab = create_lab_template(lab_size);
+   lab = mutate_lab(lab, lab_size);
++  lab = customize_lab(lab, lab_size, argv[1][0], argv[1][1]);
+   print_lab(lab, lab_size);
+   free(lab);
+   return 0;

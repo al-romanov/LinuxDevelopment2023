@@ -1,0 +1,41 @@
+--- lab2.c	2023-11-18 23:55:08.850570440 +0300
++++ lab3.c	2023-11-18 23:55:46.349613649 +0300
+@@ -122,28 +122,33 @@
+ void print_usage(const char *prog_name) {
+   fputs("Usage: ", stderr);
+   fprintf(stderr, "%s ", prog_name);
+-  fputs("symbols size\n", stderr);
++  fputs("seed symbols size\n", stderr);
++  fputs("\tseed is seed for random generator. If the seed is a valid number, "
++        "than seed is set to the value, otherwise to 0\n",
++        stderr);
+   fputs("\tsymbols is a string containing two chars: pass and wall\n", stderr);
+   fputs("\tsize has to be greater than 1 and less than UINT_MAX\n", stderr);
+ }
+ 
+ int main(int argc, char *argv[]) {
+-  if (argc != 3) {
++  if (argc != 4) {
+     print_usage(argv[0]);
+     return 1;
+   }
+-  if (strlen(argv[1]) != 2) {
++  unsigned seed = atoi(argv[1]);
++  srand(seed);
++  if (strlen(argv[2]) != 2) {
+     print_usage(argv[0]);
+     return 2;
+   }
+-  size_t lab_size = atol(argv[2]);
++  size_t lab_size = atol(argv[3]);
+   if (lab_size == 0 || lab_size >= UINT_MAX) {
+     print_usage(argv[0]);
+     return 3;
+   }
+   char *lab = create_lab_template(lab_size);
+   lab = mutate_lab(lab, lab_size);
+-  lab = customize_lab(lab, lab_size, argv[1][0], argv[1][1]);
++  lab = customize_lab(lab, lab_size, argv[2][0], argv[2][1]);
+   print_lab(lab, lab_size);
+   free(lab);
+   return 0;
